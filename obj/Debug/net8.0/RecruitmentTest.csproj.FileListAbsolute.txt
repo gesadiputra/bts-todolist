@@ -148,3 +148,4 @@ E:\Kerja\BTS\RecruitmentTest\obj\Debug\net8.0\refint\RecruitmentTest.dll
 E:\Kerja\BTS\RecruitmentTest\obj\Debug\net8.0\RecruitmentTest.pdb
 E:\Kerja\BTS\RecruitmentTest\obj\Debug\net8.0\RecruitmentTest.genruntimeconfig.cache
 E:\Kerja\BTS\RecruitmentTest\obj\Debug\net8.0\ref\RecruitmentTest.dll
+E:\Kerja\BTS\RecruitmentTest\obj\Debug\net8.0\RecruitmentTest.sourcelink.json
