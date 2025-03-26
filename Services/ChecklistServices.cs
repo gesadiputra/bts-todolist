@@ -117,14 +117,33 @@ public class ChecklistServices : IChecklistServices
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task ItemDelete(int ChecklistId, int ItemId)
+    private async Task<ChecklistItem> GetChecklistItemAsync(int ChecklistId, int ItemId)
     {
-        throw new NotImplementedException();
+        var item = await _dbContext
+            .Set<ChecklistItem>()
+            .Where(p => p.ChecklistId == ChecklistId && p.Id == ItemId)
+            .FirstOrDefaultAsync();
+        if (item == null) throw new Exception("Item Not Found");
+        return item;
     }
 
-    public Task<ChecklistItemGetResponse> ItemGetById(int ChecklistId, int ItemId)
+    public async Task ItemDelete(int ChecklistId, int ItemId)
     {
-        throw new NotImplementedException();
+        var item = await GetChecklistItemAsync(ChecklistId, ItemId);
+        _dbContext.Remove(item);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<ChecklistItemGetResponse> ItemGetById(int ChecklistId, int ItemId)
+    {
+        var item = await GetChecklistItemAsync(ChecklistId, ItemId);
+        return new ChecklistItemGetResponse()
+        {
+            ItemId = item.Id,
+            ChecklistId = item.ChecklistId,
+            Name = item.Name,
+            IsChecked = item.IsChecked
+        };
     }
 
     public Task<List<ChecklistItemGetResponse>> ItemGetList(int ChecklistId)
