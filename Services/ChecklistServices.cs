@@ -9,7 +9,6 @@ public interface IChecklistServices
 {
     #region Checklist
     public Task Create(ChecklistCreateRequest request);
-    public Task Update();
     public Task Delete(int Id);
     public Task<List<ChecklistGetResponse>> GetAll();
     public Task<ChecklistGetResponse> GetById(int Id);
@@ -146,23 +145,35 @@ public class ChecklistServices : IChecklistServices
         };
     }
 
-    public Task<List<ChecklistItemGetResponse>> ItemGetList(int ChecklistId)
+    public async Task<List<ChecklistItemGetResponse>> ItemGetList(int ChecklistId)
     {
-        throw new NotImplementedException();
+        var items = await _dbContext
+            .Set<ChecklistItem>()
+            .Where(p => p.ChecklistId == ChecklistId)
+            .Select(p => new ChecklistItemGetResponse
+            {
+                ItemId = p.Id,
+                ChecklistId = p.ChecklistId,
+                Name = p.Name,
+                IsChecked = p.IsChecked
+            })
+            .ToListAsync();
+        return items;
     }
 
-    public Task ItemUpdate(int ChecklistId, int ItemId, ChecklistItemRequest request)
+    public async Task ItemUpdate(int ChecklistId, int ItemId, ChecklistItemRequest request)
     {
-        throw new NotImplementedException();
+        var item = await GetChecklistItemAsync(ChecklistId, ItemId);
+        _dbContext.Attach(item);
+        item.Name = request.ItemName;
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task ItemUpdteStatus(int ChecklistId, int ItemId)
+    public async Task ItemUpdteStatus(int ChecklistId, int ItemId)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task Update()
-    {
-        throw new NotImplementedException();
+        var item = await GetChecklistItemAsync(ChecklistId, ItemId);
+        _dbContext.Attach(item);
+        item.IsChecked = !item.IsChecked;
+        await _dbContext.SaveChangesAsync();
     }
 }
