@@ -42,6 +42,7 @@ builder.Services.AddSwaggerGen(o =>
 );
 
 builder.Services.AddScoped(typeof(IUserServices), typeof(UserServices));
+builder.Services.AddScoped(typeof(IChecklistServices), typeof(ChecklistServices));
 
 var app = builder.Build();
 
